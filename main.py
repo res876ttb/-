@@ -4,6 +4,7 @@
 import time
 import random
 
+par = 0.3
 dictionary_eng = {'a': '日', 'b': '月', 'c': '金', 'd': '木', 'e': '水', 'f': '火', 'g': '土', 'h': '竹', 'i': '戈', 'j': '十', 'k': '大', 'l': '中', 'm': '一', 'n': '弓', 'o': '人', 'p': '心', 'q': '手', 'r': '口', 's': '尸', 't': '廿', 'u': '山', 'v': '女', 'w': '田', 'x': '重', 'y': '卜', 'z': '難'}
 dictionary_eng_ind = [v for v in dictionary_eng]
 correct_rate = [[[0.01, 1] for i in range(0, 26)], # correct rate, number, 
@@ -50,16 +51,28 @@ def save_record():
 	f.close()
 
 def gen_p_array():
-	par = 0.4
 	for i in range(0, 26):
 		p_array[i] = correct_rate[0][i][0]
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[1][i] * par
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[2][i] * par
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[3][i] * par
-		p_array[i] = p_array[i] * (1 - par) + correct_rate[4][i] * par
+		p_array[i] = p_array[i] * 0.5 + correct_rate[4][i] * 0.5
 		p_array[i] = 1 / (p_array[i] * 3.14159)
 		if i != 0:
 			p_array[i] = p_array[i - 1] + p_array[i]
+
+def print_grade():
+	for i in range(0, 26):
+		p_array[i] = correct_rate[0][i][0]
+		p_array[i] = p_array[i] * (1 - par) + correct_rate[1][i] * par
+		p_array[i] = p_array[i] * (1 - par) + correct_rate[2][i] * par
+		p_array[i] = p_array[i] * (1 - par) + correct_rate[3][i] * par
+		p_array[i] = p_array[i] * 0.5 + correct_rate[4][i] * 0.5
+		# print(dictionary_eng[dictionary_eng_ind[i]] + "：" + str(p_array[i]))
+		if i != 0:
+			p_array[i] += p_array[i - 1]
+	print("學習成果：", round(p_array[25] / 26 * 100, 2))
+	print("建議分數： 80")
 
 def update_record(ind, correct, time):
 	correct_rate[0][ind][0] = correct_rate[1][ind] / correct_rate[0][ind][1] + correct_rate[0][ind][0] * (correct_rate[0][ind][1] - 1) / correct_rate[0][ind][1]
@@ -91,6 +104,7 @@ def main_loop():
 		if (x < 'a' or x > 'z') and x != '':
 			print("儲存記錄...")
 			save_record()
+			print_grade()
 			break
 		if x == dictionary_eng_ind[ind]:
 			time_diff = end_time - start_time
