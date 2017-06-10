@@ -4,6 +4,14 @@
 import time
 import random
 
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+BOLD = '\033[1m'
+UNDERLINE = '\033[4m'
 par = 0.3
 dictionary_eng = {'a': '日', 'b': '月', 'c': '金', 'd': '木', 'e': '水', 'f': '火', 'g': '土', 'h': '竹', 'i': '戈', 'j': '十', 'k': '大', 'l': '中', 'm': '一', 'n': '弓', 'o': '人', 'p': '心', 'q': '手', 'r': '口', 's': '尸', 't': '廿', 'u': '山', 'v': '女', 'w': '田', 'x': '重', 'y': '卜', 'z': '難'}
 dictionary_eng_ind = [v for v in dictionary_eng]
@@ -108,10 +116,10 @@ def main_loop():
             break
         if x == dictionary_eng_ind[ind]:
             time_diff = end_time - start_time
-            print("正確！花費時間：", round(time_diff, 3), "秒")
+            print(OKGREEN + "正確" + ENDC + "！花費時間：", round(time_diff, 3), "秒")
             update_record(ind, 1.0, time_diff)
         else:
-            x = input("錯誤！正確答案為：" + dictionary_eng_ind[ind] + "! 按下enter來繼續...")
+            x = input(FAIL + "錯誤" + ENDC + "！正確答案為：" + FAIL + BOLD + dictionary_eng_ind[ind] + ENDC + "! 按下enter來繼續...")
             update_record(ind, 0.0, 1.0)
             
 
