@@ -11,7 +11,7 @@ correct_rate = [[[0.01, 1] for i in range(0, 26)], # correct rate, number,
 				[0.01 for i in range(0, 26)],      # correct rate
 				[0.01 for i in range(0, 26)],      # correct rate
 				[0.01 for i in range(0, 26)]]      # correct rate
-p_array = [0.0 for i in range(0, 26)]             # probability weight array
+p_array = [0.0 for i in range(0, 26)]              # probability weight array
 
 random.seed()
 
@@ -57,7 +57,7 @@ def gen_p_array():
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[2][i] * par
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[3][i] * par
 		p_array[i] = p_array[i] * (1 - par) + correct_rate[4][i] * par
-		p_array[i] = 1 / p_array[i]
+		p_array[i] = 1 / (p_array[i] * 3.14159)
 		if i != 0:
 			p_array[i] = p_array[i - 1] + p_array[i]
 
