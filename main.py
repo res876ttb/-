@@ -22,6 +22,8 @@ correct_rate = [[[0.01, 1] for i in range(0, 26)], # correct rate, number,
                 [0.01 for i in range(0, 26)]]      # correct rate
 p_array = [0.0 for i in range(0, 26)]              # probability weight array
 
+cjd = {}
+
 random.seed()
 
 def read_record():
@@ -100,7 +102,7 @@ def get_index():
     
 def main_loop():
     print("輸入任意數字或符號來離開程式")
-    print("若使用ctrl+c離開程式，記錄將不會被保存")
+    print("若使用 ctrl+c 離開程式，記錄將不會被保存")
     while True:
         ind = get_index()
         print("=========================")
