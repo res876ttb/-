@@ -144,7 +144,7 @@ def main_loop():
         x = input("請輸入對應的英文字母：")
         end_time = time.time()
         x = x.lower()
-        if (x < 'a' or x > 'z') and x != 'i' and x != ';':
+        if (x < 'a' or x > 'z') and x != '' and x != ';':
             print("儲存記錄...")
             save_record()
             print_grade()
