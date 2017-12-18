@@ -13,14 +13,47 @@ ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
 par = 0.3
-dictionary_eng = {'a': '日', 'b': '月', 'c': '金', 'd': '木', 'e': '水', 'f': '火', 'g': '土', 'h': '竹', 'i': '戈', 'j': '十', 'k': '大', 'l': '中', 'm': '一', 'n': '弓', 'o': '人', 'p': '心', 'q': '手', 'r': '口', 's': '尸', 't': '廿', 'u': '山', 'v': '女', 'w': '田', 'z': '重', 'y': '卜', 'x': '難'}
-dictionary_eng_ind = [v for v in dictionary_eng]
-correct_rate = [[[0.01, 1] for i in range(0, 26)], # correct rate, number, 
-                [0.01 for i in range(0, 26)],      # correct rate
-                [0.01 for i in range(0, 26)],      # correct rate
-                [0.01 for i in range(0, 26)],      # correct rate
-                [0.01 for i in range(0, 26)]]      # correct rate
-p_array = [0.0 for i in range(0, 26)]              # probability weight array
+dictionary = {
+    'iu': 'q',
+    'ia': 'w',
+    'ua': 'w',
+    'er': 'r',
+    'uan': 'r',
+    'ue': 't',
+    'uai': 'y',
+    'ü': 'y',
+    'sh': 'u',
+    'ch': 'i',
+    'uo': 'o',
+    'un': 'p',
+    'iong': 's',
+    'ong': 's',
+    'uang': 'd',
+    'iang': 'd',
+    'en': 'f',
+    'eng': 'g',
+    'ang': 'h',
+    'an': 'j',
+    'ao': 'k',
+    'ai': 'l',
+    'ing': ';',
+    'ei': 'z',
+    'ie': 'x',
+    'iao': 'c',
+    'zh': 'v',
+    'ui': 'v',
+    'ou': 'b',
+    'in': 'n',
+    'ian': 'm',
+}
+dictionary_eng_ind = [v for v in dictionary]
+# dictionary_eng_ind = dictionary
+correct_rate = [[[0.01, 1] for i in range(0, 31)], # correct rate, number, 
+                [0.01 for i in range(0, 31)],      # correct rate
+                [0.01 for i in range(0, 31)],      # correct rate
+                [0.01 for i in range(0, 31)],      # correct rate
+                [0.01 for i in range(0, 31)]]      # correct rate
+p_array = [0.0 for i in range(0, 31)]              # probability weight array
 
 cjd = {}
 
@@ -29,39 +62,39 @@ random.seed()
 def read_record():
     file_open_success = False
     try:
-        f = open("record.cjlm", "r")
+        f = open("record.splm", "r")
         file_open_success = True
         f.close()
     except:
-        print("檔案 record.cjlm 不存在！")
+        print("檔案 record.splm 不存在！")
         
     if file_open_success:
-        print("讀取 record.cjlm...")
-        f = open("record.cjlm", "r")
+        print("讀取 record.splm...")
+        f = open("record.splm", "r")
         x = f.read()
         x = x.split()
-        for i in range(0, 26):
+        for i in range(0, 31):
             correct_rate[0][i][0] = float(x[i * 2])
             correct_rate[0][i][1] = int(x[i * 2 + 1])
         for i in range(1, 5):
-            for j in range(0, 26):
-                correct_rate[i][j] = float(x[52 + 26 * (i - 1) + j])
+            for j in range(0, 31):
+                correct_rate[i][j] = float(x[62 + 31 * (i - 1) + j])
         f.close()
     else:
         save_record()
 
 def save_record():
-    f = open("record.cjlm", "w")
-    for i in range(26):
+    f = open("record.splm", "w")
+    for i in range(31):
         f.write(f"{correct_rate[0][i][0]:.9f}" + "\n")
         f.write(str(correct_rate[0][i][1]) + "\n")
     for i in range(1, 5):
-        for j in range(0, 26):
+        for j in range(0, 31):
             f.write(f"{correct_rate[i][j]:.9f}" + "\n")
     f.close()
 
 def gen_p_array():
-    for i in range(0, 26):
+    for i in range(0, 31):
         p_array[i] = correct_rate[0][i][0]
         p_array[i] = p_array[i] * (1 - par) + correct_rate[1][i] * par
         p_array[i] = p_array[i] * (1 - par) + correct_rate[2][i] * par
@@ -72,7 +105,7 @@ def gen_p_array():
             p_array[i] = p_array[i - 1] + p_array[i]
 
 def print_grade():
-    for i in range(0, 26):
+    for i in range(0, 31):
         p_array[i] = correct_rate[0][i][0]
         p_array[i] = p_array[i] * (1 - par) + correct_rate[1][i] * par
         p_array[i] = p_array[i] * (1 - par) + correct_rate[2][i] * par
@@ -81,7 +114,7 @@ def print_grade():
         # print(dictionary_eng[dictionary_eng_ind[i]] + "：" + str(p_array[i]))
         if i != 0:
             p_array[i] += p_array[i - 1]
-    print("學習成果：", round(p_array[25] / 26 * 100, 2))
+    print("學習成果：", round(p_array[30] / 31 * 100, 2))
     print("建議分數： 80")
 
 def update_record(ind, correct, time):
@@ -94,11 +127,11 @@ def update_record(ind, correct, time):
 def get_index():
     rand_num = random.random()
     gen_p_array()
-    rand_num = rand_num * p_array[25]
-    for i in range(0, 26):
+    rand_num = rand_num * p_array[30]
+    for i in range(0, 31):
         if rand_num <= p_array[i]:
             return i
-    return 25
+    return 30
     
 def main_loop():
     print("輸入任意數字或符號來離開程式")
@@ -106,22 +139,22 @@ def main_loop():
     while True:
         ind = get_index()
         print("=========================")
-        print("倉頡碼：" + dictionary_eng[dictionary_eng_ind[ind]])
+        print("拼音碼：" + dictionary_eng_ind[ind])
         start_time = time.time()
         x = input("請輸入對應的英文字母：")
         end_time = time.time()
         x = x.lower()
-        if (x < 'a' or x > 'z') and x != '':
+        if (x < 'a' or x > 'z') and x != 'i' and x != ';':
             print("儲存記錄...")
             save_record()
             print_grade()
             break
-        if x == dictionary_eng_ind[ind]:
+        if x == dictionary[dictionary_eng_ind[ind]]:
             time_diff = end_time - start_time
             print(OKGREEN + "正確" + ENDC + "！花費時間：", round(time_diff, 3), "秒")
             update_record(ind, 1.0, time_diff)
         else:
-            x = input(FAIL + "錯誤" + ENDC + "！正確答案為：" + FAIL + BOLD + dictionary_eng_ind[ind] + ENDC + "! 按下enter來繼續...")
+            x = input(FAIL + "錯誤" + ENDC + "！正確答案為：" + FAIL + BOLD + dictionary[dictionary_eng_ind[ind]] + ENDC + "! 按下enter來繼續...")
             update_record(ind, 0.0, 1.0)
             
 
