@@ -13,38 +13,41 @@ ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
 par = 0.3
+keyboard = [['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l',';'],
+            ['z','x','c','v','b','n','m',]]
 dictionary = {
-    'iu': 'q',
-    'ia': 'w',
-    'ua': 'w',
-    'er': 'r',
-    'uan': 'r',
-    'ue': 't',
-    'uai': 'y',
-    'ü': 'y',
-    'sh': 'u',
-    'ch': 'i',
-    'uo': 'o',
-    'un': 'p',
-    'iong': 's',
-    'ong': 's',
-    'uang': 'd',
-    'iang': 'd',
-    'en': 'f',
-    'eng': 'g',
-    'ang': 'h',
-    'an': 'j',
-    'ao': 'k',
-    'ai': 'l',
-    'ing': ';',
-    'ei': 'z',
-    'ie': 'x',
-    'iao': 'c',
-    'zh': 'v',
-    'ui': 'v',
-    'ou': 'b',
-    'in': 'n',
-    'ian': 'm',
+    ('ㄧㄡ', 'iu'): 'q',
+    ('ㄧㄚ', 'ia'): 'w',
+    ('ㄨㄚ', 'ua'): 'w',
+    ('ㄦ', 'er'): 'r',
+    ('ㄨㄢ', 'uan'): 'r',
+    ('ㄩㄝ', 'ue'): 't',
+    ('ㄨㄞ', 'uai'): 'y',
+    ('ㄩ', 'ü'): 'y',
+    ('ㄕ', 'sh'): 'u',
+    ('ㄔ', 'ch'): 'i',
+    ('ㄨㄛ', 'uo'): 'o',
+    ('ㄩㄣ', 'un'): 'p',
+    ('ㄩㄥ', 'iong'): 's',
+    ('ㄨㄥ', 'ong'): 's',
+    ('ㄨㄤ', 'uang'): 'd',
+    ('ㄧㄤ', 'iang'): 'd',
+    ('ㄣ', 'en'): 'f',
+    ('ㄥ', 'eng'): 'g',
+    ('ㄤ', 'ang'): 'h',
+    ('ㄢ', 'an'): 'j',
+    ('ㄠ', 'ao'): 'k',
+    ('ㄞ', 'ai'): 'l',
+    ('ㄧㄥ', 'ing'): ';',
+    ('ㄟ', 'ei'): 'z',
+    ('ㄧㄝ', 'ie'): 'x',
+    ('ㄧㄠ', 'iao'): 'c',
+    ('ㄓ', 'zh'): 'v',
+    ('ㄨㄟ', 'ui'): 'v',
+    ('ㄡ', 'ou'): 'b',
+    ('ㄧㄣ', 'in'): 'n',
+    ('ㄧㄢ', 'ian'): 'm',
 }
 dictionary_eng_ind = [v for v in dictionary]
 # dictionary_eng_ind = dictionary
@@ -58,6 +61,31 @@ p_array = [0.0 for i in range(0, 31)]              # probability weight array
 cjd = {}
 
 random.seed()
+
+
+def printKeyboard(keyin):
+    line = keyboard[0]
+    for c in line:
+        if c == keyin:
+            print(FAIL + c + ENDC, end='  ')
+        else:
+            print(c, end='  ')
+    print('\n ',end='')
+    line = keyboard[1]
+    for c in line:
+        if c == keyin:
+            print(FAIL + c + ENDC, end='  ')
+        else:
+            print(c, end='  ')
+    print('\n  ',end='')
+    line = keyboard[2]
+    for c in line:
+        if c == keyin:
+            print(FAIL + c + ENDC, end='  ')
+        else:
+            print(c, end='  ')
+    print()
+
 
 def read_record():
     file_open_success = False
@@ -139,7 +167,7 @@ def main_loop():
     while True:
         ind = get_index()
         print("=========================")
-        print("拼音碼：" + dictionary_eng_ind[ind])
+        print("注音：" + dictionary_eng_ind[ind][0] + ', 拼音：' + dictionary_eng_ind[ind][1])
         start_time = time.time()
         x = input("請輸入對應的英文字母：")
         end_time = time.time()
@@ -154,9 +182,12 @@ def main_loop():
             print(OKGREEN + "正確" + ENDC + "！花費時間：", round(time_diff, 3), "秒")
             update_record(ind, 1.0, time_diff)
         else:
-            x = input(FAIL + "錯誤" + ENDC + "！正確答案為：" + FAIL + BOLD + dictionary[dictionary_eng_ind[ind]] + ENDC + "! 按下enter來繼續...")
+            print(FAIL + "錯誤" + ENDC + "！正確答案為：")
+            printKeyboard(dictionary[dictionary_eng_ind[ind]])
+            x = input("按下enter來繼續...")
             update_record(ind, 0.0, 1.0)
             
 
 read_record()
 main_loop()
+
